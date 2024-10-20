@@ -1,63 +1,64 @@
 "use client";
 
-import { searchSchema } from "@/schemas";
 import { useSettingsContext } from "@/settings";
-import { AppBar, Button, Stack, Typography, useTheme } from "@mui/material";
-import { useForm } from "react-hook-form";
-import { FormProvider } from "../react-hook-form";
-import { AddRounded } from "@mui/icons-material";
-import { useGlobalContext } from "@/contexts";
+import { FavoriteRounded } from "@mui/icons-material";
+import { Stack, Typography, alpha, useTheme } from "@mui/material";
 
 export const Header = () => {
     const theme = useTheme();
-    const { openDialog } = useGlobalContext();
-    const { toggleTheme } = useSettingsContext();
-
-    const methods = useForm(searchSchema({ search: "" }));
-
-    const onSubmit = methods["handleSubmit"](async (data) => {
-        console.log(data);
-    });
+    const { isMobile } = useSettingsContext();
 
     return (
-        <AppBar
-            position="fixed"
-            color="primary"
+        <Stack
+            width={1}
+            py={isMobile ? 1 : 2}
+            direction={{ xs: "column", md: "row" }}
+            gap={isMobile ? 2 : 1}
+            justifyContent="space-between"
+            alignItems="center"
+            // position="relative"
+            // position="sticky"
+            // top={0}
             sx={{
-                margin: "auto",
-                left: "auto",
-                right: "auto",
-                boxShadow: "none",
+                cursor: "default",
+                backdropFilter: "blur(4px)",
+                background: alpha(theme.palette.background.default, 0.8),
             }}
         >
-            <FormProvider methods={methods} onSubmit={onSubmit}>
-                <Stack direction="row">
-                    <Stack
-                        width={1}
-                        py={2}
-                        bgcolor="background.default"
-                        border={`1px solid ${theme.palette.divider}`}
-                    >
-                        <Button onClick={toggleTheme}>Toggle Theme</Button>
-                    </Stack>
+            <Typography variant={isMobile ? "h3" : "h2"}>
+                things unsaid...
+            </Typography>
 
-                    <Stack
-                        width={1}
-                        py={2}
-                        bgcolor="background.default"
-                        border={`1px solid ${theme.palette.divider}`}
-                    >
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            startIcon={<AddRounded />}
-                            onClick={openDialog}
-                        >
-                            create
-                        </Button>
-                    </Stack>
-                </Stack>
-            </FormProvider>
-        </AppBar>
+            <Stack
+                direction={{ xs: "column", md: "row" }}
+                gap={1}
+                alignItems="center"
+            >
+                <Typography variant="button">
+                    Created with love{" "}
+                    <FavoriteRounded
+                        fontSize="20"
+                        sx={{
+                            color: theme.palette.tertiary.main,
+                            my: -0.2,
+                            mx: 0.5,
+                        }}
+                    />
+                </Typography>
+
+                <Typography
+                    variant="h3"
+                    sx={{
+                        fontFamily: "Creattion",
+                        fontWeight: 600,
+                        textTransform: "none",
+                        letterSpacing: 2,
+                        pt: 1,
+                    }}
+                >
+                    Harmeet Singh
+                </Typography>
+            </Stack>
+        </Stack>
     );
 };

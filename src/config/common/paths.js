@@ -5,6 +5,6 @@ const append = (data = []) => {
 };
 
 export const PATHS = {
-    home: append([prefix]),
+    home: append([prefix, "/"]),
     single_note: (note_id) => append([prefix, note_id]),
 };

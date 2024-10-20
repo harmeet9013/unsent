@@ -1,11 +1,12 @@
-import { connectDB } from "@/server/db";
+import { connectDB } from "@/server";
 import { CommonLayout } from "@/layouts";
 import { SettingsProvider } from "@/settings";
-import { primaryFont, ThemeProvider } from "@/theme";
 import { GlobalContextProvider } from "@/contexts";
+import { NotisSnackbarProvider } from "@/components";
+import { primaryFont, ThemeProvider } from "@/theme";
 
 export const metadata = {
-    title: "unsent",
+    title: "things unsaid",
     description: "did you find one?",
 };
 
@@ -21,9 +22,11 @@ export default function RootLayout({ children }) {
             <body className={primaryFont.className}>
                 <SettingsProvider>
                     <ThemeProvider>
-                        <GlobalContextProvider>
-                            <CommonLayout>{children}</CommonLayout>
-                        </GlobalContextProvider>
+                        <NotisSnackbarProvider>
+                            <GlobalContextProvider>
+                                <CommonLayout>{children}</CommonLayout>
+                            </GlobalContextProvider>
+                        </NotisSnackbarProvider>
                     </ThemeProvider>
                 </SettingsProvider>
             </body>

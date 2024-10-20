@@ -4,6 +4,7 @@ import {
     createTheme,
     CssBaseline,
     ThemeProvider as MuiThemeProvider,
+    responsiveFontSizes,
 } from "@mui/material";
 //
 import { useSettingsContext } from "@/settings";
@@ -29,6 +30,8 @@ export const ThemeProvider = ({ children }) => {
     });
 
     theme.components = ComponentsOverrides(theme);
+
+    // theme.typography = responsiveFontSizes(theme);
 
     return (
         <MuiThemeProvider theme={theme}>

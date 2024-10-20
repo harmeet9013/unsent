@@ -23,6 +23,7 @@ import { FormProvider, RHFTextField } from "../react-hook-form";
 import { newCardSchema } from "@/schemas";
 import { POST_REQUEST } from "@/lib";
 import { grey } from "@mui/material/colors";
+import { closeSnackbar, enqueueSnackbar } from "notistack";
 
 export const CreateCard = () => {
     const theme = useTheme();
@@ -38,7 +39,25 @@ export const CreateCard = () => {
         const response = await POST_REQUEST(ENDPOINTS["create"], data);
 
         if (response?.status) {
-            console.log("Created");
+            const note_url = window.location.href + response?.data?.key;
+
+            enqueueSnackbar("note created!", {
+                action: (
+                    <>
+                        <Button
+                            onClick={() => {
+                                closeSnackbar();
+                                navigator.clipboard.writeText(note_url);
+                                enqueueSnackbar("note copied");
+                            }}
+                        >
+                            copy note
+                        </Button>
+                    </>
+                ),
+            });
+            methods["reset"]();
+            closeDialog();
         } else {
             console.log("error", response);
         }
@@ -75,34 +94,34 @@ export const CreateCard = () => {
                 },
             }}
         >
-            <FormProvider methods={methods} onSubmit={onSubmit}>
-                <DialogTitle>
-                    <Stack
-                        width={1}
-                        direction="row"
-                        alignItems="center"
-                        justifyContent="space-between"
+            <DialogTitle>
+                <Stack
+                    width={1}
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                >
+                    <Typography variant="h5" color="text.primary">
+                        new note
+                    </Typography>
+
+                    <IconButton
+                        onClick={closeDialog}
+                        sx={{
+                            background: theme.palette.tertiary.main,
+                            color: theme.palette.tertiary.contrastText,
+                            "&:hover": {
+                                background: theme.palette.tertiary.dark,
+                            },
+                        }}
                     >
-                        <Typography variant="h5" color="text.primary">
-                            new note
-                        </Typography>
+                        <CloseRounded />
+                    </IconButton>
+                </Stack>
+            </DialogTitle>
 
-                        <IconButton
-                            onClick={closeDialog}
-                            sx={{
-                                background: theme.palette.primary.main,
-                                color: theme.palette.primary.contrastText,
-                                "&:hover": {
-                                    background: theme.palette.primary.dark,
-                                },
-                            }}
-                        >
-                            <CloseRounded />
-                        </IconButton>
-                    </Stack>
-                </DialogTitle>
-
-                <DialogContent dividers>
+            <DialogContent dividers>
+                <FormProvider methods={methods} onSubmit={onSubmit}>
                     <Stack width={1} gap={2}>
                         <Card
                             variant="outlined"
@@ -117,6 +136,11 @@ export const CreateCard = () => {
                                 backgroundColor:
                                     theme.palette[CARD_COLORS[currentColor]]
                                         ?.main,
+                                transition: theme.transitions.create([
+                                    "background-color",
+                                    "color",
+                                    "border-color",
+                                ]),
                             }}
                         >
                             <Stack direction="column" width={1}>
@@ -138,6 +162,12 @@ export const CreateCard = () => {
                                         theme.palette[CARD_COLORS[currentColor]]
                                             ?.light
                                     }
+                                    sx={{
+                                        transition: theme.transitions.create([
+                                            "background-color",
+                                            "color",
+                                        ]),
+                                    }}
                                 >
                                     to:
                                     <RHFTextField
@@ -151,6 +181,11 @@ export const CreateCard = () => {
                                                     CARD_COLORS[currentColor]
                                                 ]?.contrastText,
                                                 fontWeight: 600,
+                                                transition:
+                                                    theme.transitions.create([
+                                                        "background-color",
+                                                        "color",
+                                                    ]),
                                             },
                                         }}
                                     />
@@ -165,6 +200,11 @@ export const CreateCard = () => {
                                         style: {
                                             color: grey[900],
                                             fontWeight: 600,
+                                            transition:
+                                                theme.transitions.create([
+                                                    "background-color",
+                                                    "color",
+                                                ]),
                                         },
                                     }}
                                     sx={{
@@ -186,18 +226,22 @@ export const CreateCard = () => {
                             shuffle color
                         </Button>
                     </Stack>
-                </DialogContent>
+                </FormProvider>
+            </DialogContent>
 
-                <DialogActions>
-                    <Button variant="outlined" onClick={closeDialog}>
-                        close
-                    </Button>
+            <DialogActions>
+                <Button
+                    variant="outlined"
+                    color="tertiary"
+                    onClick={closeDialog}
+                >
+                    close
+                </Button>
 
-                    <Button variant="contained" type="submit">
-                        submit
-                    </Button>
-                </DialogActions>
-            </FormProvider>
+                <Button variant="contained" color="tertiary" onClick={onSubmit}>
+                    submit
+                </Button>
+            </DialogActions>
         </Dialog>
     );
 };

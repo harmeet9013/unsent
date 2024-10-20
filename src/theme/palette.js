@@ -96,9 +96,16 @@ const COLORS = (mode, theme) => {
         ...(mode === "light" ? light : dark),
         ...common,
         background: {
+            // default:
+            //     PALETTE_NAMES[theme]["schemes"][mode]["surfaceContainerLowest"],
+            // paper: PALETTE_NAMES[theme]["schemes"][mode]["surfaceContainer"],
             default:
-                PALETTE_NAMES[theme]["schemes"][mode]["surfaceContainerLowest"],
-            paper: PALETTE_NAMES[theme]["schemes"][mode]["surfaceContainer"],
+                PALETTE_NAMES[theme]["palettes"]["neutral"][
+                    mode === "light" ? "95" : "0"
+                ],
+            paper: PALETTE_NAMES[theme]["palettes"]["neutral"][
+                mode === "light" ? "90" : "5"
+            ],
         },
         divider: alpha(
             PALETTE_NAMES[theme]["schemes"][mode]["outlineVariant"],
