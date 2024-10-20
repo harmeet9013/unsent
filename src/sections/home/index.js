@@ -1,15 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Fade, Stack } from "@mui/material";
 //
 import { Footer, Header } from "@/components";
 //
 import { HomeListView } from "./list-view";
 
-export const HomeView = ({ cards, pagination }) => {
-    const [allCards, setAllCards] = useState([...cards]);
+export const HomeView = ({ cards = [], pagination = {} }) => {
+    const [allCards, setAllCards] = useState([]);
     const [updatedPagination, setUpdatedPagination] = useState(pagination);
+
+    useEffect(() => {
+        if (cards?.length) {
+            setAllCards([...cards]);
+        }
+    }, [cards]);
 
     return (
         <Fade in={true}>
