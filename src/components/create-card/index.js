@@ -13,17 +13,17 @@ import {
     Card,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
+import { grey } from "@mui/material/colors";
 import { useEffect, useState } from "react";
+import { closeSnackbar, enqueueSnackbar } from "notistack";
 import { CloseRounded, ShuffleOnRounded } from "@mui/icons-material";
 //
-import { CARD_COLORS, ENDPOINTS } from "@/config";
+import { POST_REQUEST } from "@/lib";
+import { newCardSchema } from "@/schemas";
 import { useGlobalContext } from "@/contexts";
+import { CARD_COLORS, ENDPOINTS } from "@/config";
 //
 import { FormProvider, RHFTextField } from "../react-hook-form";
-import { newCardSchema } from "@/schemas";
-import { POST_REQUEST } from "@/lib";
-import { grey } from "@mui/material/colors";
-import { closeSnackbar, enqueueSnackbar } from "notistack";
 
 export const CreateCard = () => {
     const theme = useTheme();

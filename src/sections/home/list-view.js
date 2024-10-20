@@ -1,29 +1,33 @@
 "use client";
 
-import { grey } from "@mui/material/colors";
-import { useRouter } from "next/navigation";
 import {
     Card,
-    Fade,
     Grid2,
-    IconButton,
     Stack,
-    Tooltip,
-    Typography,
     alpha,
+    Button,
+    Tooltip,
     useTheme,
+    IconButton,
+    Typography,
 } from "@mui/material";
-//
-import { CARD_COLORS, PATHS } from "@/config";
-import {
-    CopyAllRounded,
-    LinkRounded,
-    OpenInNewRounded,
-} from "@mui/icons-material";
+import { useState } from "react";
+import { grey } from "@mui/material/colors";
 import { enqueueSnackbar } from "notistack";
+import { CopyAllRounded } from "@mui/icons-material";
+//
+import { GET_REQUEST } from "@/lib";
+import { CARD_COLORS, ENDPOINTS } from "@/config";
 
-export const HomeListView = ({ cards }) => {
+export const HomeListView = ({
+    allCards,
+    setAllCards,
+    pagination,
+    setUpdatedPagination,
+}) => {
     const theme = useTheme();
+
+    const [isFetching, setIsFetching] = useState(false);
 
     const handleNoteClick = (note_id) => {
         const note_url = window.location.href + note_id;
@@ -31,10 +35,28 @@ export const HomeListView = ({ cards }) => {
         enqueueSnackbar("copied");
     };
 
+    const loadMoreCards = async () => {
+        setIsFetching(true);
+
+        const response = await GET_REQUEST(ENDPOINTS["list"], {
+            page: pagination?.page + 1,
+            limit: pagination?.limit,
+        });
+
+        console.log(response);
+
+        if (response?.status) {
+            setAllCards((prevState) => [...prevState, ...response?.data]);
+            setUpdatedPagination(response?.pagination);
+        }
+
+        setIsFetching(false);
+    };
+
     return (
-        <Stack width={1} pt={4} pb={12}>
+        <Stack width={1} pt={4} pb={12} gap={2}>
             <Grid2 container spacing={2} alignItems="stretch">
-                {cards?.map((item, index) => {
+                {allCards?.map((item, index) => {
                     const pickedColor =
                         theme.palette[
                             item?.color ||
@@ -133,6 +155,19 @@ export const HomeListView = ({ cards }) => {
                     );
                 })}
             </Grid2>
+
+            {pagination?.page < pagination?.total_pages && (
+                <Stack width={1} justifyContent="center" alignItems="center">
+                    <Button
+                        disabled={isFetching}
+                        onClick={loadMoreCards}
+                        variant="contained"
+                        color="tertiary"
+                    >
+                        load more
+                    </Button>
+                </Stack>
+            )}
         </Stack>
     );
 };

@@ -16,8 +16,8 @@ const intializeConnections = async () => {
     return response?.status;
 };
 
-export default function RootLayout({ children }) {
-    return intializeConnections() ? (
+export default async function RootLayout({ children }) {
+    return (await intializeConnections()) ? (
         <html lang="en">
             <body className={primaryFont.className}>
                 <SettingsProvider>

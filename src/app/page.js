@@ -1,17 +1,11 @@
-import { ENDPOINTS } from "@/config";
 import { GET_REQUEST } from "@/lib";
+import { ENDPOINTS } from "@/config";
 import { HomeView } from "@/sections";
 
-export default async function () {
-    const fetchData = async () => {
-        const response = await GET_REQUEST(ENDPOINTS["list"]);
+export default async function Page() {
+    const response = await GET_REQUEST(ENDPOINTS["list"]);
 
-        if (response?.status) {
-            return <HomeView cards={response?.data} />;
-        } else {
-            <>404</>;
-        }
-    };
-
-    return fetchData();
+    return (
+        <HomeView cards={response?.data} pagination={response?.pagination} />
+    );
 }

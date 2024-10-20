@@ -1,7 +1,7 @@
 "use client";
 
+import { getCookie } from "cookies-next";
 import { useMediaQuery } from "@mui/material";
-import { getCookie, setCookie } from "cookies-next";
 import { useState, useMemo, useEffect } from "react";
 //
 //
@@ -14,13 +14,6 @@ export const SettingsProvider = ({ children }) => {
     const [mode, setMode] = useState("dark");
     const [selectedPalette, setSelectedPalette] = useState(3);
 
-    const toggleTheme = () => {
-        const newTheme = mode === "light" ? "dark" : "light";
-
-        setMode(newTheme);
-        setCookie("theme", newTheme);
-    };
-
     useEffect(() => {
         setMode(getCookie("theme") || systemTheme ? "dark" : "light");
     }, [systemTheme]);
@@ -30,10 +23,9 @@ export const SettingsProvider = ({ children }) => {
             isMobile,
             mode,
             setMode,
-            toggleTheme,
             selectedPalette,
         }),
-        [isMobile, mode, setMode, toggleTheme, selectedPalette]
+        [isMobile, mode, setMode, selectedPalette]
     );
 
     return (
