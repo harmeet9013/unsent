@@ -24,6 +24,7 @@ import { useGlobalContext } from "@/contexts";
 import { CARD_COLORS, ENDPOINTS } from "@/config";
 //
 import { FormProvider, RHFTextField } from "../react-hook-form";
+import { LoadingButton } from "@mui/lab";
 
 export const CreateCard = () => {
     const theme = useTheme();
@@ -31,11 +32,8 @@ export const CreateCard = () => {
     const methods = useForm(newCardSchema({ to: "", message: "", color: "" }));
 
     const [currentColor, setCurrentColor] = useState(0);
-    const [isUpdating, setIsUpdating] = useState(false);
 
     const onSubmit = methods["handleSubmit"](async (data) => {
-        setIsUpdating(true);
-
         const response = await POST_REQUEST(ENDPOINTS["create"], data);
 
         if (response?.status) {
@@ -61,8 +59,6 @@ export const CreateCard = () => {
         } else {
             console.log("error", response);
         }
-
-        setIsUpdating(false);
     });
 
     const generateColor = () => {
@@ -238,9 +234,14 @@ export const CreateCard = () => {
                     close
                 </Button>
 
-                <Button variant="contained" color="tertiary" onClick={onSubmit}>
+                <LoadingButton
+                    variant="contained"
+                    color="tertiary"
+                    loading={methods["formState"]["isSubmitting"]}
+                    onClick={onSubmit}
+                >
                     submit
-                </Button>
+                </LoadingButton>
             </DialogActions>
         </Dialog>
     );
