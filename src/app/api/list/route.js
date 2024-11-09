@@ -1,17 +1,19 @@
-import { cardModel } from "@/server";
+import { cardModel, connectDB } from "@/server";
 
 export async function GET(req) {
-    const searchTerm = req?.nextUrl?.searchParams?.get("search");
-    const pageOptions = {
-        page: searchTerm
-            ? 1
-            : parseInt(req.nextUrl.searchParams.get("page")) || 1,
-        limit: searchTerm
-            ? 9
-            : parseInt(req.nextUrl.searchParams.get("limit")) || 9,
-    };
+    const dbConnected = await connectDB();
 
-    try {
+    if (!!dbConnected) {
+        const searchTerm = req?.nextUrl?.searchParams?.get("search");
+        const pageOptions = {
+            page: searchTerm
+                ? 1
+                : parseInt(req.nextUrl.searchParams.get("page")) || 1,
+            limit: searchTerm
+                ? 9
+                : parseInt(req.nextUrl.searchParams.get("limit")) || 9,
+        };
+
         const response = await cardModel
             .find({
                 ...(searchTerm
@@ -71,9 +73,7 @@ export async function GET(req) {
             },
             { status: 200 }
         );
-    } catch (error) {
-        console.log("ERROR", error);
-
+    } else {
         return Response.json(
             {
                 status: false,
