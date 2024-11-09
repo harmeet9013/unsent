@@ -18,7 +18,7 @@ import { searchSchema } from "@/schemas";
 import { GET_REQUEST } from "@/lib";
 import { ENDPOINTS } from "@/config";
 
-export const Footer = ({ isFetching, setAllCards, setUpdatedPagination }) => {
+export const Footer = ({ setAllCards, setUpdatedPagination }) => {
     const theme = useTheme();
     const { openDialog } = useGlobalContext();
 
@@ -58,14 +58,10 @@ export const Footer = ({ isFetching, setAllCards, setUpdatedPagination }) => {
                             variant="outlined"
                             color="tertiary"
                             placeholder="search here"
-                            disabled={isFetching}
                             InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end">
-                                        <IconButton
-                                            disabled={isFetching}
-                                            type="submit"
-                                        >
+                                        <IconButton type="submit">
                                             <SearchRounded />
                                         </IconButton>
                                     </InputAdornment>
@@ -77,7 +73,6 @@ export const Footer = ({ isFetching, setAllCards, setUpdatedPagination }) => {
                         />
                         <Tooltip title="create new note" disableInteractive>
                             <Fab
-                                disabled={isFetching}
                                 color="tertiary"
                                 onClick={openDialog}
                                 sx={{

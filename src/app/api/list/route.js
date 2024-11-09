@@ -1,4 +1,4 @@
-import { cardModel, connectDB } from "@/server";
+import { cardModel, connectDB, errorResponse, successResponse } from "@/server";
 
 export async function GET(req) {
     const dbConnected = await connectDB();
@@ -14,8 +14,34 @@ export async function GET(req) {
                 : parseInt(req.nextUrl.searchParams.get("limit")) || 9,
         };
 
-        const response = await cardModel
-            .find({
+        try {
+            const response = await cardModel
+                .find({
+                    ...(searchTerm
+                        ? {
+                              $or: [
+                                  {
+                                      to: {
+                                          $regex: ".*" + searchTerm + ".*",
+                                          $options: "i",
+                                      },
+                                  },
+                                  {
+                                      message: {
+                                          $regex: ".*" + searchTerm + ".*",
+                                          $options: "i",
+                                      },
+                                  },
+                              ],
+                          }
+                        : {}),
+                })
+                .skip(pageOptions?.limit * (pageOptions?.page - 1))
+                .limit(pageOptions?.limit)
+                .sort("-updatedAt")
+                .select("-_id -__v");
+
+            const noteCounts = await cardModel.countDocuments({
                 ...(searchTerm
                     ? {
                           $or: [
@@ -34,54 +60,25 @@ export async function GET(req) {
                           ],
                       }
                     : {}),
-            })
-            .skip(pageOptions?.limit * (pageOptions?.page - 1))
-            .limit(pageOptions?.limit)
-            .sort("-updatedAt")
-            .select("-_id -__v");
+            });
 
-        const noteCounts = await cardModel.countDocuments({
-            ...(searchTerm
-                ? {
-                      $or: [
-                          {
-                              to: {
-                                  $regex: ".*" + searchTerm + ".*",
-                                  $options: "i",
-                              },
-                          },
-                          {
-                              message: {
-                                  $regex: ".*" + searchTerm + ".*",
-                                  $options: "i",
-                              },
-                          },
-                      ],
-                  }
-                : {}),
-        });
-
-        return Response.json(
-            {
-                status: true,
-                message: "Fetched cards",
+            return successResponse("Fetched cards", {
                 data: response,
                 pagination: {
                     ...pageOptions,
                     total_pages: Math.ceil(noteCounts / pageOptions?.limit),
                 },
-            },
-            { status: 200 }
-        );
-    } else {
-        return Response.json(
-            {
-                status: false,
-                message: "Error fetching data",
-                data: false,
+            });
+        } catch (error) {
+            return errorResponse("Error fetching data", {
+                data: [],
                 pagination: false,
-            },
-            { status: 200 }
-        );
+            });
+        }
+    } else {
+        return errorResponse("Error fetching data", {
+            data: [],
+            pagination: false,
+        });
     }
 }

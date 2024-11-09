@@ -1,35 +1,38 @@
-import { NextResponse } from "next/server";
-//
-import { cardModel } from "@/server";
 import ShortUniqueId from "short-unique-id";
+//
+import { cardModel, connectDB, errorResponse, successResponse } from "@/server";
 
 export async function POST(req) {
-    const data = await req.json();
+    const dbConnected = await connectDB();
 
-    const uid = new ShortUniqueId({ length: 10 });
+    if (!!dbConnected) {
+        const data = await req.json();
 
-    const { to, message, color } = data;
+        const uid = new ShortUniqueId({ length: 10 });
 
-    const newCard = new cardModel({
-        to: to,
-        message: message,
-        color: color,
-        key: uid.rnd(),
-    });
+        const { to, message, color } = data;
 
-    try {
-        const response = await newCard.save();
-
-        return new Response({
-            status: true,
-            message: "Saved card!",
-            data: response,
+        const newCard = new cardModel({
+            to: to,
+            message: message,
+            color: color,
+            key: uid.rnd(),
         });
-    } catch (error) {
-        console.log(error);
-        return new Response({
-            status: false,
-            message: "Error saving card!",
+
+        try {
+            const response = await newCard.save();
+
+            return successResponse("Saved card!", {
+                data: response,
+            });
+        } catch (error) {
+            console.log(error);
+            return errorResponse("Error saving card!", {
+                data: [],
+            });
+        }
+    } else {
+        return errorResponse("Error saving card!", {
             data: [],
         });
     }

@@ -1,4 +1,3 @@
-import { connectDB } from "@/server";
 import { CommonLayout } from "@/layouts";
 import { SettingsProvider } from "@/settings";
 import { GlobalContextProvider } from "@/contexts";
@@ -10,14 +9,8 @@ export const metadata = {
     description: "did you find one?",
 };
 
-const intializeConnections = async () => {
-    const response = await connectDB();
-
-    return response?.status;
-};
-
 export default async function RootLayout({ children }) {
-    return (await intializeConnections()) ? (
+    return (
         <html lang="en">
             <body className={primaryFont.className}>
                 <SettingsProvider>
@@ -31,7 +24,5 @@ export default async function RootLayout({ children }) {
                 </SettingsProvider>
             </body>
         </html>
-    ) : (
-        <></>
     );
 }

@@ -1,22 +1,33 @@
-import { cardModel } from "@/server";
+import { cardModel, connectDB, errorResponse, successResponse } from "@/server";
 
 export async function GET(req) {
-    // const data = await req.json();
-    const note_id = req.nextUrl.searchParams.get("note_id");
+    const dbConnected = await connectDB();
 
-    const response = await cardModel.find({ key: note_id }).select("-_id -__v");
+    if (!!dbConnected) {
+        const note_id = req.nextUrl.searchParams.get("note_id");
 
-    if (!!response?.length) {
-        return new Response({
-            status: true,
-            message: "Fetched cards",
-            data: response?.at(0),
-        });
+        try {
+            const response = await cardModel
+                .find({ key: note_id })
+                .select("-_id -__v");
+
+            if (!!response?.length) {
+                return successResponse("Fetched cards", {
+                    data: response?.at(0),
+                });
+            } else {
+                return errorResponse("Note not found", {
+                    data: false,
+                });
+            }
+        } catch (error) {
+            return errorResponse("Error fetching data", {
+                data: [],
+            });
+        }
     } else {
-        return new Response({
-            status: false,
-            message: "Note not found",
-            data: false,
+        return errorResponse("Error fetching data", {
+            data: [],
         });
     }
 }
