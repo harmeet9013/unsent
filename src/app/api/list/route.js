@@ -11,6 +11,8 @@ export async function GET(req) {
             : parseInt(req.nextUrl.searchParams.get("limit")) || 9,
     };
 
+    console.log("Request Recieved");
+
     const response = await cardModel
         .find({
             ...(searchTerm
@@ -36,6 +38,8 @@ export async function GET(req) {
         .limit(pageOptions?.limit)
         .sort("-updatedAt")
         .select("-_id -__v");
+
+    console.log(response);
 
     const noteCounts = await cardModel.countDocuments({
         ...(searchTerm
