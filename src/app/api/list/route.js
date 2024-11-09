@@ -1,5 +1,4 @@
 import { cardModel } from "@/server";
-import { NextResponse } from "next/server";
 
 export async function GET(req) {
     const searchTerm = req?.nextUrl?.searchParams?.get("search");
@@ -59,13 +58,16 @@ export async function GET(req) {
             : {}),
     });
 
-    return NextResponse.json({
-        status: true,
-        message: "Fetched cards",
-        data: response,
-        pagination: {
-            ...pageOptions,
-            total_pages: Math.ceil(noteCounts / pageOptions?.limit),
+    return new Response(
+        {
+            status: true,
+            message: "Fetched cards",
+            data: response,
+            pagination: {
+                ...pageOptions,
+                total_pages: Math.ceil(noteCounts / pageOptions?.limit),
+            },
         },
-    });
+        { status: 200 }
+    );
 }

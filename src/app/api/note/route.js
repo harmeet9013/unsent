@@ -1,5 +1,4 @@
 import { cardModel } from "@/server";
-import { NextResponse } from "next/server";
 
 export async function GET(req) {
     // const data = await req.json();
@@ -8,13 +7,13 @@ export async function GET(req) {
     const response = await cardModel.find({ key: note_id }).select("-_id -__v");
 
     if (!!response?.length) {
-        return NextResponse.json({
+        return new Response({
             status: true,
             message: "Fetched cards",
             data: response?.at(0),
         });
     } else {
-        return NextResponse.json({
+        return new Response({
             status: false,
             message: "Note not found",
             data: false,

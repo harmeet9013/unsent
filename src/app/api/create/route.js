@@ -20,14 +20,14 @@ export async function POST(req) {
     try {
         const response = await newCard.save();
 
-        return NextResponse.json({
+        return new Response({
             status: true,
             message: "Saved card!",
             data: response,
         });
     } catch (error) {
         console.log(error);
-        return NextResponse.json({
+        return new Response({
             status: false,
             message: "Error saving card!",
             data: [],
