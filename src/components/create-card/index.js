@@ -16,7 +16,11 @@ import { useForm } from "react-hook-form";
 import { grey } from "@mui/material/colors";
 import { useEffect, useState } from "react";
 import { closeSnackbar, enqueueSnackbar } from "notistack";
-import { CloseRounded, ShuffleOnRounded } from "@mui/icons-material";
+import {
+    AddRounded,
+    CloseRounded,
+    ShuffleOnRounded,
+} from "@mui/icons-material";
 //
 import { POST_REQUEST } from "@/lib";
 import { newCardSchema } from "@/schemas";
@@ -239,8 +243,9 @@ export const CreateCard = () => {
                     color="tertiary"
                     loading={methods["formState"]["isSubmitting"]}
                     onClick={onSubmit}
+                    startIcon={<AddRounded />}
                 >
-                    submit
+                    create
                 </LoadingButton>
             </DialogActions>
         </Dialog>

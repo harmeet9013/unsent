@@ -75,6 +75,9 @@ export const SingleNoteView = ({ cardData }) => {
                                                     : alpha(grey[900], 0.8)
                                             }
                                             fontWeight={600}
+                                            sx={{
+                                                wordBreak: "break-all",
+                                            }}
                                         >
                                             {cardData?.to || "anonymous"}
                                         </Typography>
@@ -105,11 +108,12 @@ export const SingleNoteView = ({ cardData }) => {
                         alignItems="center"
                     >
                         <Button
+                            variant="contained"
                             color="tertiary"
                             onClick={handleHomeClick}
                             startIcon={<ArrowBackRounded />}
                         >
-                            go home
+                            go to home
                         </Button>
                     </Stack>
                 </Stack>

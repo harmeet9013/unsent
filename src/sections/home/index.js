@@ -1,14 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import {
     Box,
     Fade,
-    LinearProgress,
     Stack,
-    Typography,
     useTheme,
+    Typography,
+    LinearProgress,
 } from "@mui/material";
+import { useEffect, useState } from "react";
 //
 import { GET_REQUEST } from "@/lib";
 import { ENDPOINTS } from "@/config";
@@ -33,6 +33,7 @@ export const HomeView = () => {
         if (response?.status) {
             setAllCards([...response?.data]);
             setPagination(response?.pagination);
+            setUpdatedPagination(response?.pagination);
         }
 
         setIsFetching(false);
@@ -46,7 +47,7 @@ export const HomeView = () => {
         <Fade in={true}>
             <Stack component="main">
                 <Header />
-                {!isFetching ? (
+                {isFetching ? (
                     <Box pt={10} width={theme.spacing(40)} mx="auto">
                         <Typography variant="h6">Loading...</Typography>
                         <LinearProgress color="tertiary" />

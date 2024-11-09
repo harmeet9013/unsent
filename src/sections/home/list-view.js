@@ -111,6 +111,9 @@ export const HomeListView = ({
                                                         : alpha(grey[900], 0.8)
                                                 }
                                                 fontWeight={600}
+                                                sx={{
+                                                    wordBreak: "break-all",
+                                                }}
                                             >
                                                 {item?.to || "anonymous"}
                                             </Typography>
