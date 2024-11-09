@@ -11,8 +11,6 @@ export async function GET(req) {
             : parseInt(req.nextUrl.searchParams.get("limit")) || 9,
     };
 
-    console.log("Request Recieved");
-
     try {
         const response = await cardModel
             .find({
@@ -40,8 +38,6 @@ export async function GET(req) {
             .sort("-updatedAt")
             .select("-_id -__v");
 
-        console.log(response);
-
         const noteCounts = await cardModel.countDocuments({
             ...(searchTerm
                 ? {
@@ -63,7 +59,7 @@ export async function GET(req) {
                 : {}),
         });
 
-        return new Response(
+        return Response.json(
             {
                 status: true,
                 message: "Fetched cards",
@@ -78,7 +74,7 @@ export async function GET(req) {
     } catch (error) {
         console.log("ERROR", error);
 
-        return new Response(
+        return Response.json(
             {
                 status: false,
                 message: "Error fetching data",
